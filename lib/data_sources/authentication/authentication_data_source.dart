@@ -17,6 +17,14 @@ class AuthenticationDataSourceImpl implements AuthenticationDataSource {
 
   @override
   FutureOr<AppUser> create({required SignInParam param}) async {
-    throw UnimplementedError();
+    final result = await _authInstance.signInWithEmailAndPassword(
+      email: param.username,
+      password: param.password,
+    );
+
+    return AppUser(
+      displayName: result.user?.displayName ?? '',
+      email: result.user!.email!,
+    );
   }
 }
