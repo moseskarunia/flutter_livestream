@@ -13,6 +13,11 @@ class MockUserCredential extends Mock implements UserCredential {}
 class MockUser extends Mock implements User {}
 
 void main() {
+  final signInParamFixture = SignInParam(
+    username: 'johndoe@test.com',
+    password: 'admin123*',
+  );
+
   late UserCredential userCredential;
   late User user;
   late FirebaseAuth authInstance;
@@ -28,6 +33,14 @@ void main() {
   });
 
   group('create', () {
+    tearDown(() {
+      verify(
+        () => authInstance.signInWithEmailAndPassword(
+          email: 'johndoe@test.com',
+          password: 'admin123*',
+        ),
+      ).called(1);
+    });
     group('should convert FirebaseAuthException to CornerstoneException', () {
       test('with name err.app.WRONG_PASSWORD', () async {
         when(
@@ -38,21 +51,23 @@ void main() {
         ).thenThrow(FirebaseAuthException(code: 'wrong-password'));
 
         await expectLater(
-          () => dataSource.create(
-            param: SignInParam(
-              username: 'johndoe@test.com',
-              password: 'admin123*',
-            ),
-          ),
+          () => dataSource.create(param: signInParamFixture),
           throwsA(CornerstoneException(name: 'err.app.WRONG_PASSWORD')),
         );
+      });
 
-        verify(
+      test('with name err.app.USER_NOT_FOUND', () async {
+        when(
           () => authInstance.signInWithEmailAndPassword(
-            email: 'johndoe@test.com',
-            password: 'admin123*',
+            email: any(named: 'email'),
+            password: any(named: 'password'),
           ),
-        ).called(1);
+        ).thenThrow(FirebaseAuthException(code: 'user-not-found'));
+
+        await expectLater(
+          () => dataSource.create(param: signInParamFixture),
+          throwsA(CornerstoneException(name: 'err.app.USER_NOT_FOUND')),
+        );
       });
     });
     test(
@@ -67,24 +82,12 @@ void main() {
           ),
         ).thenAnswer((_) async => userCredential);
 
-        final result = await dataSource.create(
-          param: SignInParam(
-            username: 'johndoe@test.com',
-            password: 'admin123*',
-          ),
-        );
+        final result = await dataSource.create(param: signInParamFixture);
 
         expect(
           result,
           AppUser(displayName: 'John Doe', email: 'johndoe@test.com'),
         );
-
-        verify(
-          () => authInstance.signInWithEmailAndPassword(
-            email: 'johndoe@test.com',
-            password: 'admin123*',
-          ),
-        ).called(1);
       },
     );
   });

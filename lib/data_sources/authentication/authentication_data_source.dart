@@ -30,8 +30,11 @@ class AuthenticationDataSourceImpl implements AuthenticationDataSource {
     } on FirebaseAuthException catch (e) {
       if (e.code == 'wrong-password') {
         throw CornerstoneException(name: 'err.app.WRONG_PASSWORD');
+      } else if (e.code == 'user-not-found') {
+        throw CornerstoneException(name: 'err.app.USER_NOT_FOUND');
       }
-      throw UnimplementedError();
+
+      throw e;
     }
   }
 }
