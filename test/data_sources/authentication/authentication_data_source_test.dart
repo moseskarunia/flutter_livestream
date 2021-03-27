@@ -42,31 +42,34 @@ void main() {
       ).called(1);
     });
     group('should convert FirebaseAuthException to CornerstoneException', () {
-      test('with name err.app.WRONG_PASSWORD', () async {
+      Future<void> _runCommonTest({
+        required String firebaseCode,
+        required String exceptionName,
+      }) async {
         when(
           () => authInstance.signInWithEmailAndPassword(
             email: any(named: 'email'),
             password: any(named: 'password'),
           ),
-        ).thenThrow(FirebaseAuthException(code: 'wrong-password'));
+        ).thenThrow(FirebaseAuthException(code: firebaseCode));
 
         await expectLater(
           () => dataSource.create(param: signInParamFixture),
-          throwsA(CornerstoneException(name: 'err.app.WRONG_PASSWORD')),
+          throwsA(CornerstoneException(name: exceptionName)),
+        );
+      }
+
+      test('with name err.app.WRONG_PASSWORD', () async {
+        await _runCommonTest(
+          firebaseCode: 'wrong-password',
+          exceptionName: 'err.app.WRONG_PASSWORD',
         );
       });
 
       test('with name err.app.USER_NOT_FOUND', () async {
-        when(
-          () => authInstance.signInWithEmailAndPassword(
-            email: any(named: 'email'),
-            password: any(named: 'password'),
-          ),
-        ).thenThrow(FirebaseAuthException(code: 'user-not-found'));
-
-        await expectLater(
-          () => dataSource.create(param: signInParamFixture),
-          throwsA(CornerstoneException(name: 'err.app.USER_NOT_FOUND')),
+        await _runCommonTest(
+          firebaseCode: 'user-not-found',
+          exceptionName: 'err.app.USER_NOT_FOUND',
         );
       });
     });
