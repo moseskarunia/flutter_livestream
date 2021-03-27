@@ -1,3 +1,4 @@
+import 'package:cornerstone/cornerstone.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_livestream/data_sources/authentication/authentication_data_source.dart';
 import 'package:firebase_livestream/entities/app_user.dart';
@@ -27,6 +28,33 @@ void main() {
   });
 
   group('create', () {
+    group('should convert FirebaseAuthException to CornerstoneException', () {
+      test('with name err.app.WRONG_PASSWORD', () async {
+        when(
+          () => authInstance.signInWithEmailAndPassword(
+            email: any(named: 'email'),
+            password: any(named: 'password'),
+          ),
+        ).thenThrow(FirebaseAuthException(code: 'wrong-password'));
+
+        await expectLater(
+          () => dataSource.create(
+            param: SignInParam(
+              username: 'johndoe@test.com',
+              password: 'admin123*',
+            ),
+          ),
+          throwsA(CornerstoneException(name: 'err.app.WRONG_PASSWORD')),
+        );
+
+        verify(
+          () => authInstance.signInWithEmailAndPassword(
+            email: 'johndoe@test.com',
+            password: 'admin123*',
+          ),
+        ).called(1);
+      });
+    });
     test(
       'must call firebaseAuth signInWithPassword and returns AppUser',
       () async {

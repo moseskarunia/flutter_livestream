@@ -17,14 +17,21 @@ class AuthenticationDataSourceImpl implements AuthenticationDataSource {
 
   @override
   FutureOr<AppUser> create({required SignInParam param}) async {
-    final result = await _authInstance.signInWithEmailAndPassword(
-      email: param.username,
-      password: param.password,
-    );
+    try {
+      final result = await _authInstance.signInWithEmailAndPassword(
+        email: param.username,
+        password: param.password,
+      );
 
-    return AppUser(
-      displayName: result.user?.displayName ?? '',
-      email: result.user!.email!,
-    );
+      return AppUser(
+        displayName: result.user?.displayName ?? '',
+        email: result.user!.email!,
+      );
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'wrong-password') {
+        throw CornerstoneException(name: 'err.app.WRONG_PASSWORD');
+      }
+      throw UnimplementedError();
+    }
   }
 }
