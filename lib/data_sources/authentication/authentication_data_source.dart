@@ -2,10 +2,11 @@ import 'dart:async';
 
 import 'package:cornerstone/cornerstone.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_livestream/entities/app_user.dart';
 import 'package:firebase_livestream/parameters/authentication/sign_in_param.dart';
 
 abstract class AuthenticationDataSource
-    implements CreatorDataSource<User, SignInParam> {}
+    implements CreatorDataSource<AppUser, SignInParam> {}
 
 class AuthenticationDataSourceImpl implements AuthenticationDataSource {
   final FirebaseAuth _authInstance;
@@ -15,7 +16,7 @@ class AuthenticationDataSourceImpl implements AuthenticationDataSource {
   }) : _authInstance = authInstance ?? FirebaseAuth.instance;
 
   @override
-  FutureOr<User> create({required SignInParam param}) async {
+  FutureOr<AppUser> create({required SignInParam param}) async {
     throw UnimplementedError();
   }
 }
