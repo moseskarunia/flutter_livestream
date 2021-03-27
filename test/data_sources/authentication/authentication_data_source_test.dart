@@ -72,6 +72,20 @@ void main() {
           exceptionName: 'err.app.USER_NOT_FOUND',
         );
       });
+
+      test('with name err.app.USER_DISABLED', () async {
+        await _runCommonTest(
+          firebaseCode: 'user-disabled',
+          exceptionName: 'err.app.USER_DISABLED',
+        );
+      });
+
+      test('with name err.app.INVALID_EMAIL', () async {
+        await _runCommonTest(
+          firebaseCode: 'invalid-email',
+          exceptionName: 'err.app.INVALID_EMAIL',
+        );
+      });
     });
     test(
       'must call firebaseAuth signInWithPassword and returns AppUser',

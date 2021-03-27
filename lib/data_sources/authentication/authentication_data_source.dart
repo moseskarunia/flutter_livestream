@@ -32,6 +32,10 @@ class AuthenticationDataSourceImpl implements AuthenticationDataSource {
         throw CornerstoneException(name: 'err.app.WRONG_PASSWORD');
       } else if (e.code == 'user-not-found') {
         throw CornerstoneException(name: 'err.app.USER_NOT_FOUND');
+      } else if (e.code == 'user-disabled') {
+        throw CornerstoneException(name: 'err.app.USER_DISABLED');
+      } else if (e.code == 'invalid-email') {
+        throw CornerstoneException(name: 'err.app.INVALID_EMAIL');
       }
 
       throw e;
