@@ -86,6 +86,22 @@ void main() {
           exceptionName: 'err.app.INVALID_EMAIL',
         );
       });
+
+      test('with err.app.UNEXPECTED_ERROR', () async {
+        final e = FirebaseAuthException(code: 'something-else');
+        
+        when(
+          () => authInstance.signInWithEmailAndPassword(
+            email: any(named: 'email'),
+            password: any(named: 'password'),
+          ),
+        ).thenThrow(e);
+
+        await expectLater(
+          () => dataSource.create(param: signInParamFixture),
+          throwsA(e),
+        );
+      });
     });
     test(
       'must call firebaseAuth signInWithPassword and returns AppUser',
