@@ -9,16 +9,16 @@ abstract class AuthenticationDataSource
     implements CreatorDataSource<AppUser, SignInParam> {}
 
 class AuthenticationDataSourceImpl implements AuthenticationDataSource {
-  final FirebaseAuth _authInstance;
+  final FirebaseAuth authInstance;
 
   AuthenticationDataSourceImpl({
-    FirebaseAuth? authInstance,
-  }) : _authInstance = authInstance ?? FirebaseAuth.instance;
+  required   this.authInstance
+  });
 
   @override
   FutureOr<AppUser> create({required SignInParam param}) async {
     try {
-      final result = await _authInstance.signInWithEmailAndPassword(
+      final result = await authInstance.signInWithEmailAndPassword(
         email: param.username,
         password: param.password,
       );

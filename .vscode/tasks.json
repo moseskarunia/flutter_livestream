@@ -1,0 +1,12 @@
+{
+  // See https://go.microsoft.com/fwlink/?LinkId=733558
+  // for the documentation about the tasks.json format
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Generate coverage",
+      "type": "shell",
+      "command": "pub global run remove_from_coverage:remove_from_coverage -f coverage/lcov.info -r '.g.dart$' && genhtml coverage/lcov.info --output coverage/"
+    }
+  ]
+}
