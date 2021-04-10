@@ -11,9 +11,7 @@ abstract class AuthenticationDataSource
 class AuthenticationDataSourceImpl implements AuthenticationDataSource {
   final FirebaseAuth authInstance;
 
-  AuthenticationDataSourceImpl({
-  required   this.authInstance
-  });
+  AuthenticationDataSourceImpl({required this.authInstance});
 
   @override
   FutureOr<AppUser> create({required SignInParam param}) async {
