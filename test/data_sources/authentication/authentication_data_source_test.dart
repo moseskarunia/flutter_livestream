@@ -89,7 +89,7 @@ void main() {
 
       test('with err.app.UNEXPECTED_ERROR', () async {
         final e = FirebaseAuthException(code: 'something-else');
-        
+
         when(
           () => authInstance.signInWithEmailAndPassword(
             email: any(named: 'email'),
