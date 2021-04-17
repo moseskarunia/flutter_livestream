@@ -73,10 +73,10 @@ void main() {
     );
   });
 
-  group('ConvertToAuthSnapshot',(){
+  group('ConvertToAuthSnapshot', () {
     final convert = const ConvertToAuthSnapshot();
-    test('should convert map to snapshot object',(){
-      expect(convert(snapJsonFixture),snapFixture);
+    test('should convert map to snapshot object', () {
+      expect(convert(snapJsonFixture), snapFixture);
     });
   });
 }

@@ -15,7 +15,6 @@ class AuthSnapshot extends CornerstoneSnapshot {
   @override
   List<Object?> get props => [appUser, timestamp];
 
-
   factory AuthSnapshot.fromJson(Map json) => _$AuthSnapshotFromJson(json);
   Map<String, dynamic> toJson() => _$AuthSnapshotToJson(this);
 }
