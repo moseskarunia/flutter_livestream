@@ -1,4 +1,5 @@
 import 'package:clock/clock.dart';
+import 'package:cornerstone/cornerstone.dart';
 import 'package:firebase_livestream/data_sources/authentication/authentication_data_source.dart';
 import 'package:firebase_livestream/entities/app_user.dart';
 import 'package:firebase_livestream/repositories/authentication/auth_repo.dart';
@@ -49,5 +50,33 @@ void main() {
   test('asJson', () {
     repo.snapshot = snapFixture;
     expect(repo.asJson, snapJsonFixture);
+  });
+
+  group('ConvertExceptionToFailure', () {
+    final convert = const ConvertExceptionToFailure();
+    test('should convert CornerstoneException to Failure', () {
+      final e = CornerstoneException(name: 'err.app.TEST_ERROR');
+      expect(
+        convert(e),
+        Failure<Object>(name: 'err.app.TEST_ERROR', details: e),
+      );
+    });
+    test(
+      'should convert other exceptions to Failure(err.app.UNEXPECTED_ERROR)',
+      () {
+        final e = Exception();
+        expect(
+          convert(e),
+          Failure<Object>(name: 'err.app.UNEXPECTED_ERROR', details: e),
+        );
+      },
+    );
+  });
+
+  group('ConvertToAuthSnapshot',(){
+    final convert = const ConvertToAuthSnapshot();
+    test('should convert map to snapshot object',(){
+      expect(convert(snapJsonFixture),snapFixture);
+    });
   });
 }
